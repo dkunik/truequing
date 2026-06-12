@@ -1,0 +1,43 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Cargar mi_album.xlsx</h2>
+
+{% if mensaje %}
+    <p style="color: green;">{{ mensaje }}</p>
+{% endif %}
+
+{% if error %}
+    <p style="color: red;">{{ error }}</p>
+{% endif %}
+
+{% if errores %}
+    <ul>
+        {% for err in errores %}
+            <li>{{ err }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<form
+    method="post"
+    enctype="multipart/form-data"
+>
+
+    {% csrf_token %}
+
+    <input
+        type="file"
+        name="archivo"
+        accept=".xlsx"
+        required
+    >
+
+    <button type="submit">
+        Cargar
+    </button>
+
+</form>
+
+{% endblock %}

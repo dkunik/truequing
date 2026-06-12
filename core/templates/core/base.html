@@ -1,0 +1,148 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Truequing</title>
+
+    <link
+        rel="manifest"
+        href="{% static 'core/pwa/manifest.json' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'core/pwa/icon-512.png' %}"
+    >
+
+    <meta
+        name="theme-color"
+        content="#222222"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'core/css/main.css' %}"
+    >
+
+</head>
+
+<body>
+
+    <div class="page">
+
+        <header class="header">
+
+            <h1>Truequing</h1>
+
+            <div class="menu">
+
+                <a href="{% url 'inicio' %}">
+                    Inicio
+                </a>
+
+                <a href="{% url 'sync_offline' %}">
+                   Cargar álbum para offline 
+                </a>
+
+                <a href="{% url 'mi_album' %}">
+                    Mi Álbum
+                </a>
+
+                <a href="{% url 'descargar_album_excel' %}">
+                    Descargar álbum
+                </a>
+
+                <a href="{% url 'importar_excel' %}">
+                    Cargar álbum
+                </a>
+
+                <a href="{% url 'mis_repetidas' %}">
+                    Mis Repetidas
+                </a>
+
+                <a href="{% url 'mis_faltantes' %}">
+                    Mis Faltantes
+                </a>
+
+                <a href="{% url 'mi_qr' %}">
+                    Mi QR
+                </a>
+
+                <a href="{% url 'posibles_canjes' %}">
+                    Posibles Canjes
+                </a>
+
+                <a href="{% url 'canje_offline' %}">
+                    Canje Offline
+                </a>
+
+                {% if user.is_authenticated %}
+
+                    <a href="{% url 'mi_perfil' %}">
+                        Mi Perfil
+                    </a>
+
+                    <form
+                        method="post"
+                        action="{% url 'logout' %}"
+                        style="display:inline;"
+                    >
+
+                        {% csrf_token %}
+
+                        <button type="submit">
+                            Salir
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+            </div>
+
+        </header>
+
+        <main class="content">
+
+            {% block content %}
+            {% endblock %}
+
+        </main>
+
+    </div>
+
+    <script>
+
+    if ("serviceWorker" in navigator) {
+
+        navigator.serviceWorker.register(
+            "/service-worker.js",
+            {
+                scope: "/",
+            }
+        )
+
+        .then(function () {
+            console.log("Service worker registrado");
+        })
+
+        .catch(function (error) {
+            console.log(
+                "Error registrando service worker:",
+                error
+            );
+        });
+
+    }
+
+    </script>
+
+
+</body>
+
+</html>

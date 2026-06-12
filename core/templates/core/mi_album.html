@@ -1,0 +1,130 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Mi Álbum</h2>
+
+{% for pais, items in paises.items %}
+
+    <div class="pais-bloque">
+
+        <h3>{{ pais.nombre }}</h3>
+
+        <div class="figuritas-grid">
+
+            {% for item in items %}
+
+                <div
+                    id="item-{{ item.id }}"
+                    class="figurita-card {% if item.cantidad == 0 %}faltante{% elif item.cantidad == 1 %}tengo{% else %}repetida{% endif %}"
+                    data-item-id="{{ item.id }}"
+                >
+
+                    <div class="numero">
+                        {{ item.figurita.numero }}
+                    </div>
+
+                    <div class="cantidad">
+                        {{ item.cantidad }}
+                    </div>
+
+                    <div class="botones">
+
+                        <button
+                            type="button"
+                            class="btn-restar"
+                            {% if item.cantidad == 0 %}disabled{% endif %}
+                        >
+                            -
+                        </button>
+
+                        <button
+                            type="button"
+                            class="btn-sumar"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endfor %}
+
+<script>
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        return parts.pop().split(";").shift();
+    }
+}
+
+function actualizarClase(card, cantidad) {
+    card.classList.remove("faltante", "tengo", "repetida");
+
+    if (cantidad === 0) {
+        card.classList.add("faltante");
+    } else if (cantidad === 1) {
+        card.classList.add("tengo");
+    } else {
+        card.classList.add("repetida");
+    }
+}
+
+document.querySelectorAll(".figurita-card").forEach(function (card) {
+    const itemId = card.dataset.itemId;
+    const cantidadDiv = card.querySelector(".cantidad");
+    const btnSumar = card.querySelector(".btn-sumar");
+    const btnRestar = card.querySelector(".btn-restar");
+
+    function enviarCambio(accion) {
+        const formData = new FormData();
+        formData.append("item_id", itemId);
+        formData.append("accion", accion);
+
+        fetch("{% url 'actualizar_figurita_album' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: formData,
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            if (!data.ok) {
+                alert(data.error || "No se pudo actualizar.");
+                return;
+            }
+
+            const cantidad = data.cantidad;
+
+            cantidadDiv.textContent = cantidad;
+            actualizarClase(card, cantidad);
+
+            btnRestar.disabled = cantidad <= 0;
+        })
+        .catch(function () {
+            alert("No se pudo actualizar la figurita.");
+        });
+    }
+
+    btnSumar.addEventListener("click", function () {
+        enviarCambio("sumar");
+    });
+
+    btnRestar.addEventListener("click", function () {
+        enviarCambio("restar");
+    });
+});
+</script>
+
+{% endblock %}

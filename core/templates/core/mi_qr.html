@@ -1,0 +1,25 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Mi QR</h2>
+
+<p>
+    Mostrá este QR para que otra persona vea tu perfil y pueda calcular un posible canje.
+</p>
+
+<div class="qr-box">
+    <img
+        src="data:image/png;base64,{{ qr_base64 }}"
+        alt="Mi QR"
+        class="qr-img"
+    >
+</div>
+
+<p>
+    <a href="{{ perfil_url }}">
+        {{ perfil_url }}
+    </a>
+</p>
+
+{% endblock %}

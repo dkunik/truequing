@@ -1,0 +1,69 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Crear cuenta</h2>
+
+<p>
+    Registrate para crear tu álbum de figuritas.
+</p>
+
+{% if error %}
+
+    <p style="color:red;">
+        {{ error }}
+    </p>
+
+{% endif %}
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <p>
+        <label>Usuario</label><br>
+
+        <input
+            type="text"
+            name="username"
+            required
+        >
+    </p>
+
+    <p>
+        <label>Contraseña</label><br>
+
+        <input
+            type="password"
+            name="password1"
+            required
+        >
+    </p>
+
+    <p>
+        <label>Repetir contraseña</label><br>
+
+        <input
+            type="password"
+            name="password2"
+            required
+        >
+    </p>
+
+    <button type="submit">
+        Crear cuenta
+    </button>
+
+</form>
+
+<p>
+
+    ¿Ya tenés cuenta?
+
+    <a href="{% url 'login' %}">
+        Iniciar sesión
+    </a>
+
+</p>
+
+{% endblock %}

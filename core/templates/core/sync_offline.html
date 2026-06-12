@@ -1,0 +1,178 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Modo Offline</h2>
+
+<p>
+    Guardá una copia de tu álbum en este teléfono para poder
+    seguir usando Truequing sin conexión.
+</p>
+
+<button id="btn-sync">
+    Guardar álbum en este teléfono
+</button>
+
+<button id="btn-count">
+    Leer álbum local
+</button>
+
+<button id="btn-estado">
+    EstadoCanje local
+</button>
+
+<button id="btn-metadata">
+    Ver metadata local
+</button>
+
+<button id="btn-qr-local">
+    Generar QR local
+</button>
+
+<div id="qr-local"></div>
+<div id="resultado"></div>
+
+<script src="/static/core/pwa/offline-db.js"></script>
+<script src="/static/core/pwa/qrcode.min.js"></script>
+<script src="/static/core/pwa/pako.min.js"></script>
+
+<script>
+
+document
+    .getElementById("btn-sync")
+    .addEventListener(
+        "click",
+        async function () {
+
+            const cantidad =
+                await sincronizarAlbumLocal();
+
+            document
+                .getElementById("resultado")
+                .innerHTML =
+                    "<p>Se copiaron "
+                    + cantidad
+                    + " figuritas.</p>";
+
+        }
+    );
+
+document
+    .getElementById("btn-count")
+    .addEventListener(
+        "click",
+        async function () {
+
+            const cantidad =
+                await contarAlbumLocal();
+
+            document
+                .getElementById("resultado")
+                .innerHTML =
+                    "<p>Hay "
+                    + cantidad
+                    + " figuritas guardadas localmente.</p>";
+
+        }
+    );
+
+document
+    .getElementById("btn-estado")
+    .addEventListener(
+        "click",
+        async function () {
+
+            const estado =
+                await obtenerEstadoCanjeLocal();
+
+            document
+                .getElementById("resultado")
+                .innerHTML =
+                    "<p>Repetidas: "
+                    + estado.repetidas.length
+                    + "</p>"
+                    +
+                    "<p>Faltantes: "
+                    + estado.faltantes.length
+                    + "</p>"
+                    +
+                    "<pre>"
+                    + JSON.stringify(
+                        estado,
+                        null,
+                        2
+                    )
+                    + "</pre>";
+
+        }
+    );
+document
+    .getElementById("btn-metadata")
+    .addEventListener(
+        "click",
+        async function () {
+
+            try {
+
+                document
+                    .getElementById("resultado")
+                    .innerHTML =
+                        "<p>Probando metadata...</p>";
+
+                const metadata =
+                    await obtenerMetadataLocal();
+
+                document
+                    .getElementById("resultado")
+                    .innerHTML =
+                        "<pre>"
+                        + JSON.stringify(metadata, null, 2)
+                        + "</pre>";
+
+            } catch (error) {
+
+                document
+                    .getElementById("resultado")
+                    .innerHTML =
+                        "<p>Error metadata: "
+                        + error
+                        + "</p>";
+
+            }
+
+        }
+    );
+
+document
+    .getElementById("btn-qr-local")
+    .addEventListener("click", async function () {
+
+        if (typeof QRCode === "undefined") {
+            document.getElementById("resultado").innerHTML =
+                "<p>QRCode no está cargado.</p>";
+            return;
+        }
+
+        const payload =
+            await exportarEstadoCanjeCompactoLocal();
+
+        const contenedor =
+            document.getElementById("qr-local");
+
+        contenedor.innerHTML = "";
+
+        new QRCode(contenedor, {
+            text: payload,
+            width: 256,
+            height: 256,
+        });
+
+        document.getElementById("resultado").innerHTML =
+            "<p>QR local generado.</p>";
+
+    });
+
+
+</script>
+
+{% endblock %}

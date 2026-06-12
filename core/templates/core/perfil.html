@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Perfil de {{ usuario_perfil.username }}</h2>
+
+<div class="resumen-perfil">
+    <p><strong>Repetidas:</strong> {{ cantidad_repetidas }}</p>
+    <p><strong>Faltantes:</strong> {{ cantidad_faltantes }}</p>
+</div>
+
+<div class="menu">
+    <a href="{% url 'posible_canje' usuario_perfil.username %}">
+        Ver posible canje
+    </a>
+</div>
+
+{% endblock %}

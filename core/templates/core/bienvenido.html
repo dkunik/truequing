@@ -1,0 +1,35 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Bienvenido a Truequing</h2>
+
+<p>
+    Tu álbum Mundial 2026 fue creado correctamente.
+</p>
+
+<p>
+    Si ya tenés muchas figuritas cargadas, podés utilizar
+    la planilla Excel para subir el álbum más rápido. Sino lo podés hacer manualmente.
+</p>
+
+<ol>
+    <li>Descargá <strong>mi_album.xlsx</strong>.</li>
+    <li>Completá las cantidades de cada figurita.</li>
+    <li>Guardá el archivo.</li>
+    <li>Más adelante podrás volver a subirlo.</li>
+</ol>
+
+<div class="menu">
+
+    <a href="{% url 'descargar_album_excel' %}">
+        Descargar mi_album.xlsx
+    </a>
+
+    <a href="{% url 'mi_album' %}">
+        Completar álbum manualmente
+    </a>
+
+</div>
+
+{% endblock %}

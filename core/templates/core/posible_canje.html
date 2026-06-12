@@ -1,0 +1,89 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Posible canje con {{ otro_usuario.username }}</h2>
+
+<div class="pais-bloque">
+
+    <h3>
+        Vos tenés repetidas que le faltan a {{ otro_usuario.username }}
+    </h3>
+
+    {% if yo_tengo_para_el %}
+
+        {% for pais, items in yo_tengo_para_el.items %}
+
+            <h4>{{ pais.nombre }}</h4>
+
+            <div class="figuritas-grid">
+
+                {% for item in items %}
+
+                    <div class="figurita-card repetida">
+
+                        <div class="numero">
+                            {{ item.numero }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            No tenés figuritas para ofrecerle.
+        </p>
+
+    {% endif %}
+
+</div>
+
+<hr>
+
+<div class="pais-bloque">
+
+    <h3>
+        {{ otro_usuario.username }} tiene repetidas que te faltan
+    </h3>
+
+    {% if el_tiene_para_mi %}
+
+        {% for pais, items in el_tiene_para_mi.items %}
+
+            <h4>{{ pais.nombre }}</h4>
+
+            <div class="figuritas-grid">
+
+                {% for item in items %}
+
+                    <div class="figurita-card repetida">
+
+                        <div class="numero">
+                            {{ item.numero }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            {{ otro_usuario.username }} no tiene nada que te falte.
+        </p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

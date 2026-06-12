@@ -1,0 +1,177 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    margin: 0;
+    background: #f4f4f4;
+    color: #222;
+}
+
+.page {
+    max-width: 1200px;
+    margin: auto;
+    padding: 16px;
+}
+
+.header {
+    margin-bottom: 16px;
+}
+
+.header h1 {
+    margin: 0 0 12px 0;
+    font-size: 32px;
+}
+
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.menu a {
+    text-decoration: none;
+    color: #222;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-weight: 600;
+}
+
+.menu a:hover {
+    background: #eee;
+}
+
+.content {
+    background: white;
+    border-radius: 14px;
+    padding: 16px;
+}
+
+.pais-bloque {
+    margin-bottom: 32px;
+}
+
+.pais-bloque h3 {
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.figuritas-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.figurita-card {
+    border: 1px solid #999;
+    border-radius: 12px;
+    width: 90px;
+    min-height: 96px;
+    padding: 8px;
+    text-align: center;
+}
+
+.numero {
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.cantidad {
+    font-size: 28px;
+    margin: 6px 0;
+}
+
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.botones button {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid #888;
+    background: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.botones button:hover {
+    background: #eee;
+}
+
+.faltante {
+    background: #ffd6d6;
+}
+
+.tengo {
+    background: #d8ffd8;
+}
+
+.repetida {
+    background: #fff4b8;
+}
+
+@media (max-width: 600px) {
+    .page {
+        padding: 10px;
+    }
+
+    .content {
+        padding: 12px;
+    }
+
+    .figurita-card {
+        width: 72px;
+        min-height: 88px;
+    }
+
+    .numero {
+        font-size: 20px;
+    }
+
+    .cantidad {
+        font-size: 24px;
+    }
+}
+.lista-canjes {
+    display: grid;
+    gap: 12px;
+}
+
+.canje-card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 14px;
+    background: #fff;
+}
+
+.canje-card h3 {
+    margin-top: 0;
+}
+
+.canje-card a {
+    display: inline-block;
+    margin-top: 8px;
+    text-decoration: none;
+    border: 1px solid #999;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #222;
+    background: #f4f4f4;
+}
+.qr-box {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.qr-img {
+    max-width: 500px;
+    width: 100%;
+    height: auto;
+}

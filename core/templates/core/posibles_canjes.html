@@ -1,0 +1,56 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Posibles canjes</h2>
+
+<p>
+    Estos son usuarios con los que podrías tener figuritas para intercambiar.
+</p>
+
+{% if resultados %}
+
+    <div class="lista-canjes">
+
+        {% for item in resultados %}
+
+            <div class="canje-card">
+
+                <h3>{{ item.usuario.username }}</h3>
+
+                <p>
+                    {{ item.usuario.username }} tiene
+                    <strong>{{ item.el_tiene_para_mi }}</strong>
+                    figuritas que te faltan.
+                </p>
+
+                <p>
+                    Vos tenés
+                    <strong>{{ item.yo_tengo_para_el }}</strong>
+                    figuritas que le faltan.
+                </p>
+
+                <p>
+                    Total de coincidencias:
+                    <strong>{{ item.total }}</strong>
+                </p>
+
+                <a href="{% url 'posible_canje' item.usuario.username %}">
+                    Ver detalle
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <p>
+        Todavía no encontramos posibles canjes.
+    </p>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Virtualenv
+truequing/
+
+# Django
+db.sqlite3
+staticfiles/
+
+# Logs
+*.log
+
+# Vim
+*.swp
+*.swo
+*~
+
+# VSCode
+.vscode/
+
+# Mac
+.DS_Store
+
+# Pytest
+.pytest_cache/
+
+# Coverage
+.coverage
+htmlcov/

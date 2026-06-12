@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Mi QR offline</h2>
+
+<p>
+    Este QR contiene una representación compacta de tus
+    repetidas y faltantes.
+</p>
+
+<p>
+    Otro usuario podrá escanearlo y calcular un posible
+    canje sin consultar el servidor.
+</p>
+
+<div class="qr-box">
+
+    <img
+        src="data:image/png;base64,{{ qr_base64 }}"
+        alt="Mi QR offline"
+        class="qr-img"
+    >
+
+</div>
+
+<h3>Payload compacto</h3>
+
+<pre
+    style="
+        white-space: pre-wrap;
+        word-break: break-all;
+        max-height: 300px;
+        overflow-y: auto;
+    "
+>
+{{ payload }}
+</pre>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Truequing offline</title>
+</head>
+
+<body>
+
+    <h1>Truequing</h1>
+
+    <p>
+        Estás sin conexión.
+    </p>
+
+    <p>
+        La versión offline de Truequing  55557 ya está activa.
+    </p>
+
+    <script src="/static/core/pwa/offline-db.js"></script>
+
+    <script>
+
+    (async function () {
+
+        await guardarValor(
+            "mensaje",
+            "hola truequing"
+        );
+
+        const cantidad = await sincronizarAlbumLocal();
+
+        document.body.innerHTML +=
+        "<p>Figuritas guardadas: "
+        + cantidad
+        + "</p>";
+
+        const valor =
+            await leerValor("mensaje");
+
+        document.body.innerHTML +=
+            "<p>" + valor + "</p>";
+
+    })();
+
+    </script>
+
+</body>
+
+</html>

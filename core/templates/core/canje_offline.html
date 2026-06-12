@@ -1,0 +1,98 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Canje offline</h2>
+
+<p>
+    Pegá el payload leído desde el QR offline de otra persona.
+</p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <textarea
+        name="payload"
+        rows="6"
+        style="width: 100%;"
+        placeholder="Pegá acá el payload del QR"
+    ></textarea>
+
+    <br><br>
+
+    <button type="submit">
+        Calcular canje
+    </button>
+</form>
+
+{% if error %}
+    <p><strong>{{ error }}</strong></p>
+{% endif %}
+
+{% if resultado %}
+
+    <hr>
+
+    <h3>Canje posible con {{ resultado.usuario_otro }}</h3>
+
+    <h4>{{ resultado.usuario_otro }} tiene repetidas que te faltan</h4>
+
+    {% if resultado.otro_tiene_para_mi %}
+
+        {% for pais, figuritas in resultado.otro_tiene_para_mi.items %}
+            <div class="pais-bloque">
+                <h4>{{ pais.nombre }}</h4>
+
+                <div class="figuritas-grid">
+                    {% for figurita in figuritas %}
+                        <div class="figurita-card repetida">
+                            <div class="numero">
+                                {{ figurita.numero }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            No encontramos figuritas que esa persona tenga repetidas y a vos te falten.
+        </p>
+
+    {% endif %}
+
+    <hr>
+
+    <h4>Vos tenés repetidas que le faltan a {{ resultado.usuario_otro }}</h4>
+
+    {% if resultado.yo_tengo_para_otro %}
+
+        {% for pais, figuritas in resultado.yo_tengo_para_otro.items %}
+            <div class="pais-bloque">
+                <h4>{{ pais.nombre }}</h4>
+
+                <div class="figuritas-grid">
+                    {% for figurita in figuritas %}
+                        <div class="figurita-card repetida">
+                            <div class="numero">
+                                {{ figurita.numero }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            No encontramos figuritas tuyas repetidas que le falten a esa persona.
+        </p>
+
+    {% endif %}
+
+{% endif %}
+
+{% endblock %}

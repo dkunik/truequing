@@ -1,0 +1,47 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>{{ titulo }}</h2>
+
+<p>
+    {{ descripcion }}
+</p>
+
+{% if paises %}
+
+    {% for pais, items in paises.items %}
+
+        <div class="pais-bloque">
+
+            <h3>{{ pais.nombre }}</h3>
+
+            <div class="figuritas-grid">
+
+                {% for item in items %}
+
+                    <div class="figurita-card">
+
+                        <div class="numero">
+                            {{ item.figurita.numero }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+{% else %}
+
+    <p>
+        No hay figuritas para mostrar.
+    </p>
+
+{% endif %}
+
+{% endblock %}

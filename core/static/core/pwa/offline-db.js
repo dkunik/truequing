@@ -330,3 +330,176 @@ async function exportarEstadoCanjeCompactoLocal() {
 
 }
 
+function base64ABytes(texto) {
+
+    const binario =
+        atob(texto);
+
+    const bytes = [];
+
+    for (let i = 0; i < binario.length; i++) {
+        bytes.push(
+            binario.charCodeAt(i)
+        );
+    }
+
+    return bytes;
+
+}
+
+function bytesABits(bytes, n) {
+
+    const bits = [];
+
+    bytes.forEach(function (byte) {
+
+        for (let bitIndex = 0; bitIndex < 8; bitIndex++) {
+
+            if (byte & (1 << bitIndex)) {
+                bits.push(1);
+            } else {
+                bits.push(0);
+            }
+
+        }
+
+    });
+
+    return bits.slice(0, n);
+
+}
+
+function bitsAIds(bits) {
+
+    const ids = [];
+
+    bits.forEach(function (bit, indice) {
+
+        if (bit) {
+            ids.push(indice + 1);
+        }
+
+    });
+
+    return ids;
+
+}
+
+function decodificarEstadoCanjeCompactoLocal(payload) {
+
+    const comprimidoBytes =
+        base64ABytes(payload);
+
+    const jsonCompacto =
+        pako.inflate(
+            new Uint8Array(comprimidoBytes),
+            {
+                to: "string",
+            }
+        );
+
+    const compacto =
+        JSON.parse(jsonCompacto);
+
+    const repetidasBytes =
+        base64ABytes(compacto.r);
+
+    const faltantesBytes =
+        base64ABytes(compacto.f);
+
+    const repetidasBits =
+        bytesABits(
+            repetidasBytes,
+            compacto.n
+        );
+
+    const faltantesBits =
+        bytesABits(
+            faltantesBytes,
+            compacto.n
+        );
+
+    return {
+        usuario: compacto.u,
+        coleccion: compacto.c,
+        repetidas: bitsAIds(repetidasBits),
+        faltantes: bitsAIds(faltantesBits),
+    };
+
+}
+
+function interseccion(a, b) {
+    const setB = new Set(b);
+    return a.filter(x => setB.has(x));
+}
+
+async function calcularCanjeConPayloadLocal(payloadOtro) {
+
+    const estadoMio =
+        await obtenerEstadoCanjeLocal();
+
+    const estadoOtro =
+        decodificarEstadoCanjeCompactoLocal(payloadOtro);
+
+    return {
+        usuarioOtro: estadoOtro.usuario,
+        yoTengoParaOtro: interseccion(
+            estadoMio.repetidas,
+            estadoOtro.faltantes
+        ),
+        otroTieneParaMi: interseccion(
+            estadoOtro.repetidas,
+            estadoMio.faltantes
+        ),
+    };
+
+}
+
+async function obtenerAlbumLocal() {
+
+    const db = await abrirDB();
+
+    return new Promise((resolve, reject) => {
+
+        const tx = db.transaction(
+            STORE_ALBUM,
+            "readonly"
+        );
+
+        const store = tx.objectStore(STORE_ALBUM);
+
+        const request = store.getAll();
+
+        request.onsuccess = function () {
+            resolve(request.result);
+        };
+
+        request.onerror = function () {
+            reject(request.error);
+        };
+
+    });
+
+}
+
+async function obtenerListasAlbumLocal() {
+
+    const album =
+        await obtenerAlbumLocal();
+
+    const faltantes =
+        album.filter(function (item) {
+            return item.cantidad === 0;
+        });
+
+    const repetidas =
+        album.filter(function (item) {
+            return item.cantidad > 1;
+        });
+
+    return {
+        faltantes: faltantes,
+        repetidas: repetidas,
+    };
+
+}

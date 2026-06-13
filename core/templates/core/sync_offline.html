@@ -2,139 +2,219 @@
 
 {% block content %}
 
-<h2>Modo Offline</h2>
+<h2>Mi QR Offline</h2>
 
 <p>
-    Guardá una copia de tu álbum en este teléfono para poder
-    seguir usando Truequing sin conexión.
+    Estamos preparando tu álbum local y generando tu QR.
 </p>
 
-<button id="btn-sync">
-    Guardar álbum en este teléfono
-</button>
-
-<button id="btn-count">
-    Leer álbum local
-</button>
-
-<button id="btn-estado">
-    EstadoCanje local
-</button>
-
-<button id="btn-metadata">
-    Ver metadata local
-</button>
-
-<button id="btn-qr-local">
-    Generar QR local
-</button>
+<div id="resultado">
+    <p>Sincronizando álbum...</p>
+</div>
 
 <div id="qr-local"></div>
-<div id="resultado"></div>
 
 <script src="/static/core/pwa/offline-db.js"></script>
 <script src="/static/core/pwa/qrcode.min.js"></script>
 <script src="/static/core/pwa/pako.min.js"></script>
+<script src="/static/core/pwa/html5-qrcode.min.js"></script>
+
+<h3>Leer QR de otro usuario</h3>
+<button id="btn-scan">
+    Escanear QR
+</button>
+<div id="reader" style="width: 300px;"></div>
+<div id="payload-otro"></div>
+
+<h3>Mi álbum offline</h3>
+<div id="album-offline"></div>
 
 <script>
 
+window.addEventListener("load", async function () {
+    try {
+        try {
+            await sincronizarAlbumLocal();
+        } catch (error) {
+            console.log(
+                "No se pudo sincronizar, uso álbum local:",
+                error
+            );
+        }
+        const payload =
+            await exportarEstadoCanjeCompactoLocal();
+        const contenedor =
+            document.getElementById("qr-local");
+        contenedor.innerHTML = "";
+        new QRCode(
+            contenedor,
+            {
+                text: payload,
+                width: 256,
+                height: 256,
+            }
+        );
+        await renderAlbumOffline();
+        document
+            .getElementById("resultado")
+            .innerHTML =
+                "<p>QR offline listo.</p>";
+    } catch (error) {
+
+        document
+            .getElementById("resultado")
+            .innerHTML =
+                "<p>No hay álbum local disponible. Conectate una vez y entrá a Modo Offline.</p>";
+        console.error(error);
+    }
+});
+async function renderAlbumOffline() {
+
+    const listas =
+        await obtenerListasAlbumLocal();
+
+    document
+        .getElementById("album-offline")
+        .innerHTML =
+            "<h4>Faltantes</h4>"
+            + renderListaFiguritas(listas.faltantes)
+            + "<h4>Repetidas</h4>"
+            + renderListaFiguritas(listas.repetidas);
+
+}
+
+function renderListaFiguritas(items) {
+
+    if (items.length === 0) {
+        return "<p>No hay.</p>";
+    }
+
+    const porPais = {};
+
+    items.forEach(function (item) {
+
+        if (!porPais[item.pais]) {
+            porPais[item.pais] = [];
+        }
+
+        porPais[item.pais].push(item.numero);
+
+    });
+
+    let html = "";
+
+    Object.keys(porPais).sort().forEach(function (pais) {
+
+        html +=
+            "<div class='pais-offline'>"
+            + "<strong>"
+            + pais
+            + "</strong>"
+            + "<p>"
+            + porPais[pais].join(", ")
+            + "</p>"
+            + "</div>";
+
+    });
+
+    return html;
+
+}
+
 document
-    .getElementById("btn-sync")
+    .getElementById("btn-scan")
     .addEventListener(
         "click",
-        async function () {
-
-            const cantidad =
-                await sincronizarAlbumLocal();
+        function () {
 
             document
-                .getElementById("resultado")
+                .getElementById("payload-otro")
                 .innerHTML =
-                    "<p>Se copiaron "
-                    + cantidad
-                    + " figuritas.</p>";
-
-        }
-    );
-
-document
-    .getElementById("btn-count")
-    .addEventListener(
-        "click",
-        async function () {
-
-            const cantidad =
-                await contarAlbumLocal();
-
-            document
-                .getElementById("resultado")
-                .innerHTML =
-                    "<p>Hay "
-                    + cantidad
-                    + " figuritas guardadas localmente.</p>";
-
-        }
-    );
-
-document
-    .getElementById("btn-estado")
-    .addEventListener(
-        "click",
-        async function () {
-
-            const estado =
-                await obtenerEstadoCanjeLocal();
-
-            document
-                .getElementById("resultado")
-                .innerHTML =
-                    "<p>Repetidas: "
-                    + estado.repetidas.length
-                    + "</p>"
-                    +
-                    "<p>Faltantes: "
-                    + estado.faltantes.length
-                    + "</p>"
-                    +
-                    "<pre>"
-                    + JSON.stringify(
-                        estado,
-                        null,
-                        2
-                    )
-                    + "</pre>";
-
-        }
-    );
-document
-    .getElementById("btn-metadata")
-    .addEventListener(
-        "click",
-        async function () {
+                    "<p>Iniciando scanner...</p>";
 
             try {
 
-                document
-                    .getElementById("resultado")
-                    .innerHTML =
-                        "<p>Probando metadata...</p>";
+                if (typeof Html5QrcodeScanner === "undefined") {
+                    document
+                        .getElementById("payload-otro")
+                        .innerHTML =
+                            "<p>html5-qrcode no está cargado.</p>";
+                    return;
+                }
 
-                const metadata =
-                    await obtenerMetadataLocal();
+                const scanner =
+                    new Html5QrcodeScanner(
+                        "reader",
+                        {
+                            fps: 10,
+                            qrbox: 250,
+                        },
+                        false
+                    );
 
-                document
-                    .getElementById("resultado")
-                    .innerHTML =
-                        "<pre>"
-                        + JSON.stringify(metadata, null, 2)
-                        + "</pre>";
+                scanner.render(
+                    function (decodedText) {
+
+                        scanner.clear();
+
+                    calcularCanjeConPayloadLocal(decodedText)
+                        .then(function (resultado) {
+
+                            document
+                                .getElementById("payload-otro")
+                                .innerHTML =
+                                    "<h3>Canje con "
+                                    + resultado.usuarioOtro
+                                    + "</h3>"
+                                    +
+                                    "<p>Yo tengo para el otro: "
+                                    + resultado.yoTengoParaOtro.length
+                                    + "</p>"
+                                    +
+                                    "<pre>"
+                                    + JSON.stringify(resultado.yoTengoParaOtro, null, 2)
+                                    + "</pre>"
+                                    +
+                                    "<p>El otro tiene para mí: "
+                                    + resultado.otroTieneParaMi.length
+                                    + "</p>"
+                                    +
+                                    "<pre>"
+                                    + JSON.stringify(resultado.otroTieneParaMi, null, 2)
+                                    + "</pre>";
+
+                        })
+                        .catch(function (error) {
+
+                            document
+                                .getElementById("payload-otro")
+                                .innerHTML =
+                                    "<p>Error leyendo QR: "
+                                    + error
+                                    + "</p>";
+
+                        });
+
+
+                        document
+                            .getElementById("payload-otro")
+                            .innerHTML =
+                                "<p>QR leído:</p><pre>"
+                                + decodedText
+                                + "</pre>";
+
+                    },
+                    function (errorMessage) {
+                        // errores de lectura normales, ignorar
+                    }
+                );
 
             } catch (error) {
 
                 document
-                    .getElementById("resultado")
+                    .getElementById("payload-otro")
                     .innerHTML =
-                        "<p>Error metadata: "
+                        "<p>Error abriendo scanner: "
                         + error
                         + "</p>";
 
@@ -143,36 +223,24 @@ document
         }
     );
 
-document
-    .getElementById("btn-qr-local")
-    .addEventListener("click", async function () {
+async function renderAlbumOffline() {
 
-        if (typeof QRCode === "undefined") {
-            document.getElementById("resultado").innerHTML =
-                "<p>QRCode no está cargado.</p>";
-            return;
-        }
+    const listas =
+        await obtenerListasAlbumLocal();
 
-        const payload =
-            await exportarEstadoCanjeCompactoLocal();
+    document
+    .getElementById("album-offline")
+    .innerHTML =
+        "<h4>Faltantes</h4>"
+        + renderListaFiguritas(listas.faltantes)
+        + "<hr style='border:3px solid #444; margin:20px 0;'>"
+        + "<h4>Repetidas</h4>"
+        + renderListaFiguritas(listas.repetidas);
 
-        const contenedor =
-            document.getElementById("qr-local");
-
-        contenedor.innerHTML = "";
-
-        new QRCode(contenedor, {
-            text: payload,
-            width: 256,
-            height: 256,
-        });
-
-        document.getElementById("resultado").innerHTML =
-            "<p>QR local generado.</p>";
-
-    });
+}
 
 
 </script>
 
 {% endblock %}
+

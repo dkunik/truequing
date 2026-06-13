@@ -1,12 +1,12 @@
 const CACHE_NAME = "truequing-v9";
 
 const URLS_TO_CACHE = [
-    "/static/core/pwa/offline.html",
     "/static/core/css/main.css",
     "/static/core/pwa/manifest.json",
     "/static/core/pwa/icon-192.png",
     "/static/core/pwa/icon-512.png",
     "/static/core/pwa/offline-db.js",
+    "/sync-offline/",
 ];
 
 self.addEventListener("install", function (event) {
@@ -49,9 +49,7 @@ self.addEventListener("fetch", function (event) {
 
                 .catch(function () {
 
-                    return caches.match(
-                        "/static/core/pwa/offline.html"
-                    );
+                    return caches.match("/sync-offline/");
 
                 })
 

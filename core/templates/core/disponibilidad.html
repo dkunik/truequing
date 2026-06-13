@@ -1,0 +1,69 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Figuritas encontradas</h2>
+
+<p>
+    Estas son las figuritas que buscás y que otras personas tienen repetidas.
+</p>
+
+{% if resultados %}
+
+    <div class="lista-canjes">
+
+        {% for resultado in resultados %}
+
+            <div class="canje-card">
+
+                <h3>
+                    {{ resultado.figurita__pais__nombre }}
+                    {{ resultado.figurita__numero }}
+                </h3>
+
+                <p>
+                    {{ resultado.usuarios }}
+                    truequers la tienen repetida.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+    <hr>
+
+    <h3>¿Querés encontrar intercambios posibles?</h3>
+
+    <p>
+        Cargá tus repetidas y Truequing puede buscar personas con las que
+        podrías intercambiar.
+    </p>
+
+    <p>
+        Para contactar truequers, registrate gratis.
+    </p>
+
+    <a href="{% url 'registro' %}">
+        Registrarme gratis
+    </a>
+
+{% else %}
+
+    <p>
+        Por ahora no encontramos truequers con esas figuritas repetidas.
+    </p>
+
+    <p>
+        Podés probar con otras figuritas o registrarte para recibir avisos
+        cuando aparezcan oportunidades.
+    </p>
+
+    <a href="{% url 'inicio' %}">
+        Buscar otras figuritas
+    </a>
+
+{% endif %}
+
+{% endblock %}

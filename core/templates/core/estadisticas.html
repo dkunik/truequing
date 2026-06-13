@@ -1,0 +1,97 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Estadísticas</h2>
+
+<p>
+    Cantidad de usuarios que tienen cada figurita como faltante o repetida.
+</p>
+
+<div class="barra-filtro-paises">
+    <input
+        type="search"
+        id="filtro-paises"
+        placeholder="Buscar país..."
+        autocomplete="off"
+    >
+</div>
+
+{% for pais, items in paises.items %}
+
+    <div
+        class="pais-bloque"
+        data-pais="{{ pais.nombre|lower }}"
+    >
+
+        <h3>{{ pais.nombre }}</h3>
+
+        <div class="figuritas-grid">
+
+            {% for item in items %}
+
+            <div class="figurita-card estadistica-card {{ item.clase }}">
+
+                    <div class="numero">
+                        {{ item.numero }}
+                    </div>
+
+<div>
+    F: {{ item.faltantes }}
+</div>
+
+<div>
+    R: {{ item.repetidas }}
+</div>
+
+<div>
+    D: {{ item.dificultad|floatformat:1 }}
+</div>
+
+                </div>
+
+
+
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endfor %}
+
+<script>
+
+const filtroPaises =
+    document.getElementById("filtro-paises");
+
+if (filtroPaises) {
+
+    filtroPaises.addEventListener("input", function () {
+
+        const texto =
+            filtroPaises.value.toLowerCase();
+
+        document
+            .querySelectorAll(".pais-bloque")
+            .forEach(function (bloque) {
+
+                const pais =
+                    bloque.dataset.pais;
+
+                if (pais.includes(texto)) {
+                    bloque.style.display = "";
+                } else {
+                    bloque.style.display = "none";
+                }
+
+            });
+
+    });
+
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>{{ titulo }}</h2>
+
+<p>
+    {{ descripcion }}
+</p>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    {% for pais, figuritas in paises.items %}
+
+        <div class="pais-bloque">
+
+            <h3>{{ pais.nombre }}</h3>
+
+            <div class="figuritas-grid">
+
+                {% for figurita in figuritas %}
+
+                    <div
+                        class="figurita-card figurita-busqueda"
+                        data-id="{{ figurita.id }}"
+                    >
+
+                        <input
+                            type="checkbox"
+                            name="figuritas"
+                            value="{{ figurita.id }}"
+                            hidden
+                        >
+
+                        <div class="numero">
+                            {{ figurita.numero }}
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+    <div class="menu">
+
+        <button type="submit">
+            Guardar faltantes
+        </button>
+
+        <a href="{% url 'bienvenido' %}">
+            Volver
+        </a>
+
+    </div>
+
+</form>
+
+<style>
+
+.figurita-card.figurita-busqueda {
+    cursor: pointer;
+}
+
+.figurita-card.figurita-busqueda.seleccionada {
+    background: #1e88e5 !important;
+    color: white !important;
+    border-color: #0d47a1 !important;
+}
+
+</style>
+
+<script>
+
+document
+    .querySelectorAll(".figurita-busqueda")
+    .forEach(function (card) {
+
+        card.addEventListener(
+            "click",
+            function () {
+
+                card.classList.toggle(
+                    "seleccionada"
+                );
+
+                const checkbox =
+                    card.querySelector("input");
+
+                checkbox.checked =
+                    card.classList.contains(
+                        "seleccionada"
+                    );
+
+            }
+        );
+
+    });
+
+</script>
+
+{% endblock %}

@@ -8,6 +8,16 @@
     {{ descripcion }}
 </p>
 
+<div class="menu">
+    <a href="{% url 'mi_album' %}">
+        Editar mi álbum
+    </a>
+
+    <a href="{% url 'bienvenido' %}">
+        Volver a bienvenida
+    </a>
+</div>
+
 {% if paises %}
 
     {% for pais, items in paises.items %}
@@ -45,3 +55,4 @@
 {% endif %}
 
 {% endblock %}
+

@@ -2,14 +2,130 @@
 
 {% block content %}
 
-<h2>Bienvenido a Truequing</h2>
+<h2>Buscar figuritas</h2>
 
 <p>
-    Plataforma para intercambio de coleccionables.
+    Marcá las figuritas que buscás.
 </p>
 
 <p>
-    Comenzá cargando tu álbum.
+    Truequing te ayuda a encontrar personas que las tienen repetidas.
 </p>
+
+<form method="post">
+    <div class="barra-busqueda">
+    <button type="submit" id="btn-buscar">
+        Buscar quién las tiene
+    </button>
+    </div>
+    {% csrf_token %}
+<div class="barra-filtro-paises">
+    <input
+        type="search"
+        id="filtro-paises"
+        placeholder="Buscar país..."
+        autocomplete="off"
+    >
+</div>
+
+{% for pais, figuritas in paises.items %}
+
+    <div
+        class="pais-bloque"
+        data-pais="{{ pais.nombre|lower }}"
+    >
+
+        <h3>{{ pais.nombre }}</h3>
+
+        <div class="figuritas-grid">
+
+            {% for figurita in figuritas %}
+
+                <div
+                    class="figurita-card figurita-busqueda"
+                    data-id="{{ figurita.id }}"
+                >
+
+                    <input
+                        type="checkbox"
+                        name="figuritas"
+                        value="{{ figurita.id }}"
+                        hidden
+                    >
+
+                    <div class="numero">
+                        {{ figurita.numero }}
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+{% endfor %}
+
+
+
+</form>
+
+
+<script>
+
+document
+    .querySelectorAll(".figurita-busqueda")
+    .forEach(function (card) {
+
+        card.addEventListener(
+            "click",
+            function () {
+
+                card.classList.toggle(
+                    "seleccionada"
+                );
+
+                const checkbox =
+                    card.querySelector("input");
+
+                checkbox.checked =
+                    card.classList.contains(
+                        "seleccionada"
+                    );
+
+            }
+        );
+
+    });
+const filtroPaises =
+    document.getElementById("filtro-paises");
+
+if (filtroPaises) {
+
+    filtroPaises.addEventListener("input", function () {
+
+        const texto =
+            filtroPaises.value.toLowerCase();
+
+        document
+            .querySelectorAll(".pais-bloque")
+            .forEach(function (bloque) {
+
+                const pais =
+                    bloque.dataset.pais;
+
+                if (pais.includes(texto)) {
+                    bloque.style.display = "";
+                } else {
+                    bloque.style.display = "none";
+                }
+
+            });
+
+    });
+
+}
+</script>
 
 {% endblock %}

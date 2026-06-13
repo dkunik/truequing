@@ -3,11 +3,37 @@
 {% block content %}
 
 <h2>Mi Álbum</h2>
+<p>
+    Cargá la cantidad total de figuritas que tenés de cada número.
+</p>
 
+<p>
+    Ejemplos:
+</p>
+
+<ul>
+    <li><strong>0</strong>: te falta la figurita.</li>
+    <li><strong>1</strong>: la tenés pegada, pero no repetida.</li>
+    <li><strong>2</strong>: tenés una repetida.</li>
+    <li><strong>3</strong>: tenés dos repetidas.</li>
+</ul>
+
+<p>
+    El número representa la cantidad total de figuritas que tenés: las que ya están en el álbum más las que tenés disponibles para intercambiar.
+</p>
+<div class="barra-filtro-paises">
+    <input
+        type="search"
+        id="filtro-paises"
+        placeholder="Buscar país..."
+        autocomplete="off"
+    >
+</div>
 {% for pais, items in paises.items %}
 
-    <div class="pais-bloque">
-
+   <div class="pais-bloque"
+    data-pais="{{ pais.nombre|lower }}"
+    >
         <h3>{{ pais.nombre }}</h3>
 
         <div class="figuritas-grid">
@@ -125,6 +151,34 @@ document.querySelectorAll(".figurita-card").forEach(function (card) {
         enviarCambio("restar");
     });
 });
+const filtroPaises =
+    document.getElementById("filtro-paises");
+
+if (filtroPaises) {
+
+    filtroPaises.addEventListener("input", function () {
+
+        const texto =
+            filtroPaises.value.toLowerCase();
+
+        document
+            .querySelectorAll(".pais-bloque")
+            .forEach(function (bloque) {
+
+                const pais =
+                    bloque.dataset.pais;
+
+                if (pais.includes(texto)) {
+                    bloque.style.display = "";
+                } else {
+                    bloque.style.display = "none";
+                }
+
+            });
+
+    });
+
+}
 </script>
 
 {% endblock %}

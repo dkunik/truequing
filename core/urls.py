@@ -3,12 +3,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path(
-        "",
-        views.inicio,
-        name="inicio",
-    ),
-
+        
     path(
         "mi-album/",
         views.mi_album,
@@ -118,4 +113,27 @@ urlpatterns = [
     name="sync_offline",
     ),
 
+    path(
+    "",
+    views.inicio,
+    name="inicio",
+    ),
+
+    path(
+    "cargar-faltantes/",
+    views.cargar_faltantes,
+    name="cargar_faltantes",
+    ),
+
+    path(
+    "cargar-repetidas/",
+    views.cargar_repetidas,
+    name="cargar_repetidas",
+    ),
+
+    path(
+    "estadisticas/",
+    views.estadisticas,
+    name="estadisticas",
+    ),
 ]

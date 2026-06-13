@@ -35,9 +35,18 @@
                     <strong>{{ item.total }}</strong>
                 </p>
 
-                <a href="{% url 'posible_canje' item.usuario.username %}">
-                    Ver detalle
-                </a>
+<div class="menu">
+
+    <a href="{% url 'posible_canje' item.usuario.username %}">
+        Ver detalle
+    </a>
+
+    <a href="{% url 'enviar_mensaje' item.usuario.username %}">
+        Enviar mensaje
+    </a>
+
+</div>
+
 
             </div>
 

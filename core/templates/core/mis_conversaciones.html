@@ -1,0 +1,39 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Bandeja de entrada</h2>
+
+{% if conversaciones %}
+
+    <div class="lista-canjes">
+
+        {% for conversacion in conversaciones %}
+
+            <div class="canje-card">
+
+                {% if conversacion.usuario_a == user %}
+                    <h3>{{ conversacion.usuario_b.username }}</h3>
+                {% else %}
+                    <h3>{{ conversacion.usuario_a.username }}</h3>
+                {% endif %}
+
+                <a href="{% url 'ver_conversacion' conversacion.id %}">
+                    Abrir conversación
+                </a>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <p>
+        No tenés conversaciones todavía.
+    </p>
+
+{% endif %}
+
+{% endblock %}

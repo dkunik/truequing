@@ -1,3 +1,4 @@
+from .mensajes import enviar_mensaje, ver_conversacion, mis_conversaciones
 from .estadisticas import estadisticas
 from .inicio import inicio
 from .sync_offline import sync_offline

@@ -118,3 +118,91 @@ class MovimientoAlbum(models.Model):
 
     def __str__(self):
         return f"{self.usuario} - {self.figurita} ({self.delta:+d})"
+
+class Conversacion(models.Model):
+
+    usuario_a = models.ForeignKey(
+
+        settings.AUTH_USER_MODEL,
+
+        on_delete=models.CASCADE,
+
+        related_name="conversaciones_iniciadas",
+
+    )
+
+    usuario_b = models.ForeignKey(
+
+        settings.AUTH_USER_MODEL,
+
+        on_delete=models.CASCADE,
+
+        related_name="conversaciones_recibidas",
+
+    )
+
+    fecha_creacion = models.DateTimeField(
+
+        auto_now_add=True,
+
+    )
+
+    class Meta:
+
+        ordering = ["-fecha_creacion"]
+
+    def __str__(self):
+
+        return (
+
+            f"{self.usuario_a.username}"
+
+            f" ↔ "
+
+            f"{self.usuario_b.username}"
+
+        )
+
+class Mensaje(models.Model):
+
+    conversacion = models.ForeignKey(
+
+        Conversacion,
+
+        on_delete=models.CASCADE,
+
+        related_name="mensajes",
+
+    )
+
+    autor = models.ForeignKey(
+
+        settings.AUTH_USER_MODEL,
+
+        on_delete=models.CASCADE,
+
+        related_name="mensajes_enviados",
+
+    )
+
+    texto = models.TextField()
+
+    fecha = models.DateTimeField(
+
+        auto_now_add=True,
+
+    )
+
+    class Meta:
+
+        ordering = ["fecha"]
+
+    def __str__(self):
+
+        return (
+
+            f"{self.autor.username}: "
+
+            f"{self.texto[:50]}"
+
+        )

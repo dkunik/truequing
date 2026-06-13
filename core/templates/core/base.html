@@ -41,6 +41,10 @@
 
             <div class="menu">
 
+                <a href="{% url 'mis_conversaciones' %}">
+                    Bandeja de entrada
+                </a>
+
                 <a href="{% url 'inicio' %}">
                     Inicio
                 </a>
@@ -85,27 +89,36 @@
                     Canje Offline
                 </a>
 
-                {% if user.is_authenticated %}
+        {% if user.is_authenticated %}
 
-                    <a href="{% url 'mi_perfil' %}">
-                        Mi Perfil
-                    </a>
+            <a href="{% url 'mi_perfil' %}">
+                Mi Perfil
+            </a>
 
-                    <form
-                        method="post"
-                        action="{% url 'logout' %}"
-                        style="display:inline;"
-                    >
+            <form
+                method="post"
+                action="{% url 'logout' %}"
+                style="display:inline;"
+            >
+                {% csrf_token %}
 
-                        {% csrf_token %}
+                <button type="submit">
+                    Salir
+                </button>
+            </form>
 
-                        <button type="submit">
-                            Salir
-                        </button>
+        {% else %}
 
-                    </form>
+            <a href="{% url 'login' %}">
+                Ingresar
+            </a>
 
-                {% endif %}
+            <a href="{% url 'registro' %}">
+                Registrarme
+            </a>
+
+        {% endif %}
+
 
             </div>
 
@@ -149,4 +162,12 @@
 
 </body>
 
+<footer>
+    <p>
+        Truequing es software libre.
+        <a href="https://github.com/dkunik/truequing">
+            Código fuente
+        </a>
+    </p>
+</footer>
 </html>

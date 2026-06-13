@@ -136,4 +136,21 @@ urlpatterns = [
     views.estadisticas,
     name="estadisticas",
     ),
+    path(
+    "mensaje/<str:username>/",
+    views.enviar_mensaje,
+    name="enviar_mensaje",
+    ),
+
+    path(
+    "conversacion/<int:conversacion_id>/",
+    views.ver_conversacion,
+    name="ver_conversacion",
+    ),
+
+    path(
+    "mensajes/",
+    views.mis_conversaciones,
+    name="mis_conversaciones",
+    ),
 ]

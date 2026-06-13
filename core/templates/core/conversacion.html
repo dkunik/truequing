@@ -1,0 +1,60 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Conversación</h2>
+
+<div class="lista-canjes">
+
+    {% for mensaje in mensajes %}
+
+        <div class="canje-card">
+
+            <strong>{{ mensaje.autor.username }}</strong>
+
+            <p>
+                {{ mensaje.texto }}
+            </p>
+
+            <small>
+                {{ mensaje.fecha }}
+            </small>
+
+        </div>
+
+    {% empty %}
+
+        <p>No hay mensajes todavía.</p>
+
+    {% endfor %}
+
+</div>
+
+<hr>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <p>
+        <textarea
+            name="texto"
+            rows="4"
+            style="width: 100%;"
+            placeholder="Responder..."
+        ></textarea>
+    </p>
+
+    <div class="menu">
+        <button type="submit">
+            Responder
+        </button>
+
+        <a href="{% url 'posibles_canjes' %}">
+            Volver
+        </a>
+    </div>
+
+</form>
+
+{% endblock %}

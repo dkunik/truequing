@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Enviar mensaje a {{ destinatario.username }}</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <p>
+        <textarea
+            name="texto"
+            rows="5"
+            style="width: 100%;"
+            placeholder="Escribí tu mensaje..."
+        ></textarea>
+    </p>
+
+    <div class="menu">
+        <button type="submit">
+            Enviar mensaje
+        </button>
+
+        <a href="{% url 'posibles_canjes' %}">
+            Volver
+        </a>
+    </div>
+
+</form>
+
+{% endblock %}

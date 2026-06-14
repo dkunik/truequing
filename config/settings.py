@@ -19,6 +19,7 @@ ALLOWED_HOSTS = [
     "181.116.79.14",
     "truequing.ar",
     "192.0.2.1",
+    "www.truequing.ar",
     ]
 
 

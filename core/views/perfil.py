@@ -50,3 +50,61 @@ def perfil_usuario(request, username):
         "cantidad_repetidas": cantidad_repetidas,
         "cantidad_faltantes": cantidad_faltantes,
     })
+
+@login_required
+def lista_usuarios(request):
+    User = get_user_model()
+
+    usuarios = (
+        User.objects
+        .exclude(id=request.user.id)
+        .order_by("username")
+    )
+
+    return render(request, "core/usuarios.html", {
+        "usuarios": usuarios,
+    })
+
+@login_required
+def album_usuario(request, username):
+    User = get_user_model()
+
+    usuario_perfil = get_object_or_404(
+        User,
+        username=username,
+    )
+
+    items = (
+        AlbumUsuario.objects
+        .filter(
+            usuario=usuario_perfil,
+        )
+        .select_related(
+            "figurita",
+            "figurita__pais",
+        )
+        .order_by(
+            "figurita__pais__nombre",
+            "figurita__numero",
+        )
+    )
+
+    paises = {}
+
+    for item in items:
+        pais = item.figurita.pais
+
+        if pais not in paises:
+            paises[pais] = []
+
+        paises[pais].append(item)
+
+    return render(
+        request,
+        "core/mi_album.html",
+        {
+            "paises": paises,
+            "usuario_perfil": usuario_perfil,
+            "solo_lectura": True,
+        },
+    )

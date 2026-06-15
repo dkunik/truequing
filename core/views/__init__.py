@@ -12,7 +12,7 @@ from .registro import registro
 from .canje import posible_canje
 from .resumen import mis_faltantes, mis_repetidas
 from .album import mi_album
-from .perfil import mi_perfil, perfil_usuario, mi_qr
+from .perfil import mi_perfil, perfil_usuario, mi_qr, lista_usuarios, album_usuario
 from .posibles import posibles_canjes
 from .offline import mi_qr_offline
 from .offline_match import canje_offline

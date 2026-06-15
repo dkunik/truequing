@@ -1,7 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect, render
 from django.contrib.auth import login
-from core.models import Coleccion
+
+from core.models import AlbumUsuario, Coleccion
 from core.services import inicializar_album_usuario
 
 
@@ -43,6 +44,39 @@ def registro(request):
                     user,
                     coleccion,
                 )
+
+                print(
+                    "SESSION EN REGISTRO:",
+                    request.session.get(
+                    "faltantes_iniciales"
+                )
+                )
+
+                faltantes_iniciales = request.session.pop(
+                        "faltantes_iniciales",
+                        []
+                    )
+                print(
+
+                    "FALTANTES RECUPERADOS:",
+
+                    faltantes_iniciales
+
+                )
+
+                if faltantes_iniciales:
+                    AlbumUsuario.objects.filter(usuario=user,).update(
+                    cantidad=1
+
+                    ) 
+
+                    AlbumUsuario.objects.filter(
+                        usuario=user,
+                        figurita_id__in=faltantes_iniciales,
+                    ).update(
+                        cantidad=0
+                    )
+
                 login(request, user)
 
                 return redirect("bienvenido")
@@ -54,3 +88,7 @@ def registro(request):
             "error": error,
         },
     )
+
+
+
+

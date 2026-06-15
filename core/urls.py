@@ -153,4 +153,17 @@ urlpatterns = [
     views.mis_conversaciones,
     name="mis_conversaciones",
     ),
+
+    path(
+    "usuarios/",
+    views.lista_usuarios,
+    name="lista_usuarios",
+    ),
+
+    path(
+    "u/<str:username>/album/",
+    views.album_usuario,
+    name="album_usuario",
+    ),
+
 ]

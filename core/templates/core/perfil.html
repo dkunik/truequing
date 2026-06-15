@@ -8,7 +8,9 @@
     <p><strong>Repetidas:</strong> {{ cantidad_repetidas }}</p>
     <p><strong>Faltantes:</strong> {{ cantidad_faltantes }}</p>
 </div>
-
+<a href="{% url 'album_usuario' usuario_perfil.username %}">
+    Ver álbum
+</a>
 <div class="menu">
     <a href="{% url 'posible_canje' usuario_perfil.username %}">
         Ver posible canje

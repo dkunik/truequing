@@ -21,6 +21,22 @@
 <p>
     El número representa la cantidad total de figuritas que tenés: las que ya están en el álbum más las que tenés disponibles para intercambiar.
 </p>
+{% if solo_lectura %}
+
+    <h2>
+        Álbum de {{ usuario_perfil.username }}
+    </h2>
+
+    <p>
+        Estás viendo el álbum público de
+        <strong>{{ usuario_perfil.username }}</strong>.
+    </p>
+
+{% else %}
+
+    <h2>Mi Álbum</h2>
+
+{% endif %}
 <div class="barra-filtro-paises">
     <input
         type="search"
@@ -82,7 +98,17 @@
     </div>
 
 {% endfor %}
+{% if solo_lectura %}
 
+<div class="menu">
+
+    <a href="{% url 'enviar_mensaje' usuario_perfil.username %}">
+        Enviar mensaje
+    </a>
+
+</div>
+
+{% endif %}
 <script>
 function getCookie(name) {
     const value = `; ${document.cookie}`;

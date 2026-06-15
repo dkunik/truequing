@@ -8,21 +8,37 @@
     {{ descripcion }}
 </p>
 
+<div class="barra-filtro-paises">
+    <input
+        type="search"
+        id="filtro-paises"
+        placeholder="Buscar país..."
+        autocomplete="off"
+    >
+</div>
+
 <div class="menu">
     <a href="{% url 'mi_album' %}">
         Editar mi álbum
     </a>
+{% if titulo == "Mis faltantes" %}
 
-    <a href="{% url 'bienvenido' %}">
-        Volver a bienvenida
+    <a href="{% url 'cargar_faltantes' %}">
+        Actualizar faltantes
     </a>
+
+{% endif %}
+
 </div>
 
 {% if paises %}
 
     {% for pais, items in paises.items %}
 
-        <div class="pais-bloque">
+        <div 
+            class="pais-bloque"
+            data-pais="{{ pais.nombre|lower }}"
+            >
 
             <h3>{{ pais.nombre }}</h3>
 
@@ -53,6 +69,41 @@
     </p>
 
 {% endif %}
+<script>
+
+const filtroPaises =
+    document.getElementById("filtro-paises");
+
+if (filtroPaises) {
+
+    filtroPaises.addEventListener(
+        "input",
+        function () {
+
+            const texto =
+                filtroPaises.value.toLowerCase();
+
+            document
+                .querySelectorAll(".pais-bloque")
+                .forEach(function (bloque) {
+
+                    const pais =
+                        bloque.dataset.pais;
+
+                    if (pais.includes(texto)) {
+                        bloque.style.display = "";
+                    } else {
+                        bloque.style.display = "none";
+                    }
+
+                });
+
+        }
+    );
+
+}
+
+</script>
 
 {% endblock %}
 

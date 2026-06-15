@@ -1,0 +1,41 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+
+<h2>Usuarios</h2>
+
+{% if usuarios %}
+
+    <div class="lista-canjes">
+
+        {% for usuario in usuarios %}
+
+            <div class="canje-card">
+
+                <h3>{{ usuario.username }}</h3>
+
+                <div class="menu">
+
+                    <a href="{% url 'perfil_usuario' usuario.username %}">
+                        Ver perfil
+                    </a>
+
+                    <a href="{% url 'enviar_mensaje' usuario.username %}">
+                        Enviar mensaje
+                    </a>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% else %}
+
+    <p>No hay otros usuarios todavía.</p>
+
+{% endif %}
+
+{% endblock %}

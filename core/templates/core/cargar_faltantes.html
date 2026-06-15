@@ -7,14 +7,24 @@
 <p>
     {{ descripcion }}
 </p>
-
+<div class="barra-filtro-paises">
+    <input
+        type="search"
+        id="filtro-paises"
+        placeholder="Buscar país..."
+        autocomplete="off"
+    >
+</div>
 <form method="post">
 
     {% csrf_token %}
 
     {% for pais, figuritas in paises.items %}
 
-        <div class="pais-bloque">
+        <div 
+            class="pais-bloque"
+            data-pais="{{ pais.nombre|lower }}"
+            >
 
             <h3>{{ pais.nombre }}</h3>
 
@@ -102,7 +112,19 @@ document
         );
 
     });
+const filtroPaises = document.getElementById("filtro-paises");
 
+if (filtroPaises) {
+    filtroPaises.addEventListener("input", function () {
+        const texto = filtroPaises.value.toLowerCase();
+
+        document.querySelectorAll(".pais-bloque").forEach(function (bloque) {
+            const pais = bloque.dataset.pais;
+
+            bloque.style.display = pais.includes(texto) ? "" : "none";
+        });
+    });
+}
 </script>
 
 {% endblock %}

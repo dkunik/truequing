@@ -31,6 +31,13 @@ def inicio(request):
             "figuritas"
         )
 
+        request.session["faltantes_iniciales"] = figurita_ids
+        request.session.modified = True
+        print(
+            "FALTANTES GUARDADOS EN SESSION:",
+            request.session.get("faltantes_iniciales")
+            )
+
         resultados = (
             AlbumUsuario.objects
             .filter(
